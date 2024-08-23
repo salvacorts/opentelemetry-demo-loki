@@ -5,13 +5,13 @@ events {
 }
 
 http {
-    otel_exporter {
-        endpoint ${OTEL_COLLECTOR_HOST}:${OTEL_COLLECTOR_PORT_GRPC};
-    }
-    otel_trace on;
-    otel_trace_context propagate;
-    otel_service_name ${OTEL_SERVICE_NAME};
-    otel_span_name imageprovider;
+#    otel_exporter {
+#        endpoint ${OTEL_COLLECTOR_HOST}:${OTEL_COLLECTOR_PORT_GRPC};
+#    }
+#    otel_trace on;
+#    otel_trace_context propagate;
+#    otel_service_name ${OTEL_SERVICE_NAME};
+#    otel_span_name imageprovider;
 
 
     include mime.types;

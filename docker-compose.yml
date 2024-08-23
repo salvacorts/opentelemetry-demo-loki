@@ -33,13 +33,13 @@ services:
     restart: unless-stopped
     environment:
       - KAFKA_SERVICE_ADDR
-      - OTEL_EXPORTER_OTLP_ENDPOINT=http://${OTEL_COLLECTOR_HOST}:${OTEL_COLLECTOR_PORT_HTTP}
-      - OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE
-      - OTEL_RESOURCE_ATTRIBUTES
-      - OTEL_SERVICE_NAME=accountingservice
+#      - OTEL_EXPORTER_OTLP_ENDPOINT=http://${OTEL_COLLECTOR_HOST}:${OTEL_COLLECTOR_PORT_HTTP}
+#      - OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE
+#      - OTEL_RESOURCE_ATTRIBUTES
+#      - OTEL_SERVICE_NAME=accountingservice
     depends_on:
-      otelcol:
-        condition: service_started
+#      otelcol:
+#        condition: service_started
       kafka:
         condition: service_healthy
     logging: *logging
@@ -64,14 +64,14 @@ services:
       - AD_SERVICE_PORT
       - FLAGD_HOST
       - FLAGD_PORT
-      - OTEL_EXPORTER_OTLP_ENDPOINT=http://${OTEL_COLLECTOR_HOST}:${OTEL_COLLECTOR_PORT_HTTP}
-      - OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE
-      - OTEL_RESOURCE_ATTRIBUTES
-      - OTEL_LOGS_EXPORTER=otlp
-      - OTEL_SERVICE_NAME=adservice
+#      - OTEL_EXPORTER_OTLP_ENDPOINT=http://${OTEL_COLLECTOR_HOST}:${OTEL_COLLECTOR_PORT_HTTP}
+#      - OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE
+#      - OTEL_RESOURCE_ATTRIBUTES
+#      - OTEL_LOGS_EXPORTER=otlp
+#      - OTEL_SERVICE_NAME=adservice
     depends_on:
-      otelcol:
-        condition: service_started
+#      otelcol:
+#        condition: service_started
       flagd:
         condition: service_started
     logging: *logging
@@ -97,15 +97,15 @@ services:
       - FLAGD_HOST
       - FLAGD_PORT
       - VALKEY_ADDR
-      - OTEL_EXPORTER_OTLP_ENDPOINT
-      - OTEL_RESOURCE_ATTRIBUTES
-      - OTEL_SERVICE_NAME=cartservice
+#      - OTEL_EXPORTER_OTLP_ENDPOINT
+#      - OTEL_RESOURCE_ATTRIBUTES
+#      - OTEL_SERVICE_NAME=cartservice
       - ASPNETCORE_URLS=http://*:${CART_SERVICE_PORT}
     depends_on:
       valkey-cart:
         condition: service_started
-      otelcol:
-        condition: service_started
+#      otelcol:
+#        condition: service_started
       flagd:
         condition: service_started
     logging: *logging
@@ -137,10 +137,10 @@ services:
       - PRODUCT_CATALOG_SERVICE_ADDR
       - SHIPPING_SERVICE_ADDR
       - KAFKA_SERVICE_ADDR
-      - OTEL_EXPORTER_OTLP_ENDPOINT
-      - OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE
-      - OTEL_RESOURCE_ATTRIBUTES
-      - OTEL_SERVICE_NAME=checkoutservice
+#      - OTEL_EXPORTER_OTLP_ENDPOINT
+#      - OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE
+#      - OTEL_RESOURCE_ATTRIBUTES
+#      - OTEL_SERVICE_NAME=checkoutservice
     depends_on:
       cartservice:
         condition: service_started
@@ -154,8 +154,8 @@ services:
         condition: service_started
       shippingservice:
         condition: service_started
-      otelcol:
-        condition: service_started
+#      otelcol:
+#        condition: service_started
       kafka:
         condition: service_healthy
       flagd:
@@ -181,11 +181,11 @@ services:
     environment:
       - CURRENCY_SERVICE_PORT
       - VERSION=${IMAGE_VERSION}
-      - OTEL_EXPORTER_OTLP_ENDPOINT
-      - OTEL_RESOURCE_ATTRIBUTES=${OTEL_RESOURCE_ATTRIBUTES},service.name=currencyservice   # The C++ SDK does not support OTEL_SERVICE_NAME
-    depends_on:
-      otelcol:
-        condition: service_started
+#      - OTEL_EXPORTER_OTLP_ENDPOINT
+#      - OTEL_RESOURCE_ATTRIBUTES=${OTEL_RESOURCE_ATTRIBUTES},service.name=currencyservice   # The C++ SDK does not support OTEL_SERVICE_NAME
+#    depends_on:
+#      otelcol:
+#        condition: service_started
     logging: *logging
 
   # Email service
@@ -207,12 +207,12 @@ services:
     environment:
       - APP_ENV=production
       - EMAIL_SERVICE_PORT
-      - OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=http://${OTEL_COLLECTOR_HOST}:${OTEL_COLLECTOR_PORT_HTTP}/v1/traces
-      - OTEL_RESOURCE_ATTRIBUTES
-      - OTEL_SERVICE_NAME=emailservice
-    depends_on:
-      otelcol:
-        condition: service_started
+#      - OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=http://${OTEL_COLLECTOR_HOST}:${OTEL_COLLECTOR_PORT_HTTP}/v1/traces
+#      - OTEL_RESOURCE_ATTRIBUTES
+#      - OTEL_SERVICE_NAME=emailservice
+#    depends_on:
+#      otelcol:
+#        condition: service_started
     logging: *logging
 
   # Fraud Detection service
@@ -233,15 +233,15 @@ services:
       - FLAGD_HOST
       - FLAGD_PORT
       - KAFKA_SERVICE_ADDR
-      - OTEL_EXPORTER_OTLP_ENDPOINT=http://${OTEL_COLLECTOR_HOST}:${OTEL_COLLECTOR_PORT_HTTP}
-      - OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE
-      - OTEL_INSTRUMENTATION_KAFKA_EXPERIMENTAL_SPAN_ATTRIBUTES=true
-      - OTEL_INSTRUMENTATION_MESSAGING_EXPERIMENTAL_RECEIVE_TELEMETRY_ENABLED=true
-      - OTEL_RESOURCE_ATTRIBUTES
-      - OTEL_SERVICE_NAME=frauddetectionservice
+#      - OTEL_EXPORTER_OTLP_ENDPOINT=http://${OTEL_COLLECTOR_HOST}:${OTEL_COLLECTOR_PORT_HTTP}
+#      - OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE
+#      - OTEL_INSTRUMENTATION_KAFKA_EXPERIMENTAL_SPAN_ATTRIBUTES=true
+#      - OTEL_INSTRUMENTATION_MESSAGING_EXPERIMENTAL_RECEIVE_TELEMETRY_ENABLED=true
+#      - OTEL_RESOURCE_ATTRIBUTES
+#      - OTEL_SERVICE_NAME=frauddetectionservice
     depends_on:
-      otelcol:
-        condition: service_started
+#      otelcol:
+#        condition: service_started
       kafka:
         condition: service_healthy
     logging: *logging
@@ -272,14 +272,14 @@ services:
       - PRODUCT_CATALOG_SERVICE_ADDR
       - RECOMMENDATION_SERVICE_ADDR
       - SHIPPING_SERVICE_ADDR
-      - OTEL_EXPORTER_OTLP_ENDPOINT
-      - OTEL_RESOURCE_ATTRIBUTES=${OTEL_RESOURCE_ATTRIBUTES}
+#      - OTEL_EXPORTER_OTLP_ENDPOINT
+#      - OTEL_RESOURCE_ATTRIBUTES=${OTEL_RESOURCE_ATTRIBUTES}
       - ENV_PLATFORM
-      - OTEL_SERVICE_NAME=frontend
-      - PUBLIC_OTEL_EXPORTER_OTLP_TRACES_ENDPOINT
-      - OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE
-      - WEB_OTEL_SERVICE_NAME=frontend-web
-      - OTEL_COLLECTOR_HOST
+#      - OTEL_SERVICE_NAME=frontend
+#      - PUBLIC_OTEL_EXPORTER_OTLP_TRACES_ENDPOINT
+#      - OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE
+#      - WEB_OTEL_SERVICE_NAME=frontend-web
+#      - OTEL_COLLECTOR_HOST
       - FLAGD_HOST
       - FLAGD_PORT
     depends_on:
@@ -299,8 +299,8 @@ services:
         condition: service_started
       shippingservice:
         condition: service_started
-      otelcol:
-        condition: service_started
+#      otelcol:
+#        condition: service_started
       imageprovider:
         condition: service_started
       flagd:
@@ -329,14 +329,14 @@ services:
       - LOCUST_WEB_PORT
       - GRAFANA_SERVICE_PORT
       - GRAFANA_SERVICE_HOST
-      - JAEGER_SERVICE_PORT
-      - JAEGER_SERVICE_HOST
-      - OTEL_COLLECTOR_HOST
+#      - JAEGER_SERVICE_PORT
+#      - JAEGER_SERVICE_HOST
+#      - OTEL_COLLECTOR_HOST
       - IMAGE_PROVIDER_HOST
       - IMAGE_PROVIDER_PORT
-      - OTEL_COLLECTOR_PORT_GRPC
-      - OTEL_COLLECTOR_PORT_HTTP
-      - OTEL_RESOURCE_ATTRIBUTES
+#      - OTEL_COLLECTOR_PORT_GRPC
+#      - OTEL_COLLECTOR_PORT_HTTP
+#      - OTEL_RESOURCE_ATTRIBUTES
       - ENVOY_PORT
       - FLAGD_HOST
       - FLAGD_PORT
@@ -345,8 +345,8 @@ services:
         condition: service_started
       loadgenerator:
         condition: service_started
-      jaeger:
-        condition: service_started
+#      jaeger:
+#        condition: service_started
       grafana:
         condition: service_started
 
@@ -368,13 +368,13 @@ services:
       - "${IMAGE_PROVIDER_PORT}"
     environment:
       - IMAGE_PROVIDER_PORT
-      - OTEL_COLLECTOR_HOST
-      - OTEL_COLLECTOR_PORT_GRPC
-      - OTEL_SERVICE_NAME=imageprovider
-      - OTEL_RESOURCE_ATTRIBUTES
-    depends_on:
-      otelcol:
-        condition: service_started
+#      - OTEL_COLLECTOR_HOST
+#      - OTEL_COLLECTOR_PORT_GRPC
+#      - OTEL_SERVICE_NAME=imageprovider
+#      - OTEL_RESOURCE_ATTRIBUTES
+#    depends_on:
+#      otelcol:
+#        condition: service_started
     logging: *logging
 
   # Load Generator
@@ -400,10 +400,10 @@ services:
       - LOCUST_HEADLESS
       - LOCUST_AUTOSTART
       - LOCUST_BROWSER_TRAFFIC_ENABLED=true
-      - OTEL_EXPORTER_OTLP_ENDPOINT
-      - OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE
-      - OTEL_RESOURCE_ATTRIBUTES
-      - OTEL_SERVICE_NAME=loadgenerator
+#      - OTEL_EXPORTER_OTLP_ENDPOINT
+#      - OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE
+#      - OTEL_RESOURCE_ATTRIBUTES
+#      - OTEL_SERVICE_NAME=loadgenerator
       - PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION=python
       - LOCUST_WEB_HOST=0.0.0.0
       - FLAGD_HOST
@@ -435,13 +435,13 @@ services:
       - PAYMENT_SERVICE_PORT
       - FLAGD_HOST
       - FLAGD_PORT
-      - OTEL_EXPORTER_OTLP_ENDPOINT
-      - OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE
-      - OTEL_RESOURCE_ATTRIBUTES
-      - OTEL_SERVICE_NAME=paymentservice
+#      - OTEL_EXPORTER_OTLP_ENDPOINT
+#      - OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE
+#      - OTEL_RESOURCE_ATTRIBUTES
+#      - OTEL_SERVICE_NAME=paymentservice
     depends_on:
-      otelcol:
-        condition: service_started
+#      otelcol:
+#        condition: service_started
       flagd:
         condition: service_started
     logging: *logging
@@ -466,13 +466,13 @@ services:
       - PRODUCT_CATALOG_SERVICE_PORT
       - FLAGD_HOST
       - FLAGD_PORT
-      - OTEL_EXPORTER_OTLP_ENDPOINT
-      - OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE
-      - OTEL_RESOURCE_ATTRIBUTES
-      - OTEL_SERVICE_NAME=productcatalogservice
+#      - OTEL_EXPORTER_OTLP_ENDPOINT
+#      - OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE
+#      - OTEL_RESOURCE_ATTRIBUTES
+#      - OTEL_SERVICE_NAME=productcatalogservice
     depends_on:
-      otelcol:
-        condition: service_started
+#      otelcol:
+#        condition: service_started
       flagd:
         condition: service_started
     logging: *logging
@@ -494,15 +494,15 @@ services:
     ports:
       - "${QUOTE_SERVICE_PORT}"
     environment:
-      - OTEL_EXPORTER_OTLP_ENDPOINT=http://${OTEL_COLLECTOR_HOST}:${OTEL_COLLECTOR_PORT_HTTP}
-      - OTEL_PHP_AUTOLOAD_ENABLED=true
+#      - OTEL_EXPORTER_OTLP_ENDPOINT=http://${OTEL_COLLECTOR_HOST}:${OTEL_COLLECTOR_PORT_HTTP}
+#      - OTEL_PHP_AUTOLOAD_ENABLED=true
       - QUOTE_SERVICE_PORT
-      - OTEL_RESOURCE_ATTRIBUTES
-      - OTEL_SERVICE_NAME=quoteservice
-      - OTEL_PHP_INTERNAL_METRICS_ENABLED=true
-    depends_on:
-      otelcol:
-        condition: service_started
+#      - OTEL_RESOURCE_ATTRIBUTES
+#      - OTEL_SERVICE_NAME=quoteservice
+#      - OTEL_PHP_INTERNAL_METRICS_ENABLED=true
+#    depends_on:
+#      otelcol:
+#        condition: service_started
     logging: *logging
 
   # Recommendation service
@@ -526,17 +526,17 @@ services:
       - PRODUCT_CATALOG_SERVICE_ADDR
       - FLAGD_HOST
       - FLAGD_PORT
-      - OTEL_PYTHON_LOG_CORRELATION=true
-      - OTEL_EXPORTER_OTLP_ENDPOINT
-      - OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE
-      - OTEL_RESOURCE_ATTRIBUTES
-      - OTEL_SERVICE_NAME=recommendationservice
+#      - OTEL_PYTHON_LOG_CORRELATION=true
+#      - OTEL_EXPORTER_OTLP_ENDPOINT
+#      - OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE
+#      - OTEL_RESOURCE_ATTRIBUTES
+#      - OTEL_SERVICE_NAME=recommendationservice
       - PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION=python
     depends_on:
       productcatalogservice:
         condition: service_started
-      otelcol:
-        condition: service_started
+#      otelcol:
+#        condition: service_started
       flagd:
         condition: service_started
     logging: *logging
@@ -560,12 +560,12 @@ services:
     environment:
       - SHIPPING_SERVICE_PORT
       - QUOTE_SERVICE_ADDR
-      - OTEL_EXPORTER_OTLP_ENDPOINT=http://${OTEL_COLLECTOR_HOST}:${OTEL_COLLECTOR_PORT_GRPC}
-      - OTEL_RESOURCE_ATTRIBUTES
-      - OTEL_SERVICE_NAME=shippingservice
-    depends_on:
-      otelcol:
-        condition: service_started
+#      - OTEL_EXPORTER_OTLP_ENDPOINT=http://${OTEL_COLLECTOR_HOST}:${OTEL_COLLECTOR_PORT_GRPC}
+#      - OTEL_RESOURCE_ATTRIBUTES
+#      - OTEL_SERVICE_NAME=shippingservice
+#    depends_on:
+#      otelcol:
+#        condition: service_started
     logging: *logging
 
   # ******************
@@ -579,11 +579,11 @@ services:
       resources:
         limits:
           memory: 50M
-    environment:
-      - FLAGD_OTEL_COLLECTOR_URI=${OTEL_COLLECTOR_HOST}:${OTEL_COLLECTOR_PORT_GRPC}
-      - FLAGD_METRICS_EXPORTER=otel
-      - OTEL_RESOURCE_ATTRIBUTES
-      - OTEL_SERVICE_NAME=flagd
+#    environment:
+#      - FLAGD_OTEL_COLLECTOR_URI=${OTEL_COLLECTOR_HOST}:${OTEL_COLLECTOR_PORT_GRPC}
+#      - FLAGD_METRICS_EXPORTER=otel
+#      - OTEL_RESOURCE_ATTRIBUTES
+#      - OTEL_SERVICE_NAME=flagd
     command: [
       "start",
       "--uri",
@@ -612,10 +612,10 @@ services:
     restart: unless-stopped
     environment:
       - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092
-      - OTEL_EXPORTER_OTLP_ENDPOINT=http://${OTEL_COLLECTOR_HOST}:${OTEL_COLLECTOR_PORT_HTTP}
-      - OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE
-      - OTEL_RESOURCE_ATTRIBUTES
-      - OTEL_SERVICE_NAME=kafka
+#      - OTEL_EXPORTER_OTLP_ENDPOINT=http://${OTEL_COLLECTOR_HOST}:${OTEL_COLLECTOR_PORT_HTTP}
+#      - OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE
+#      - OTEL_RESOURCE_ATTRIBUTES
+#      - OTEL_SERVICE_NAME=kafka
       - KAFKA_HEAP_OPTS=-Xmx400m -Xms400m
     healthcheck:
       test: nc -z kafka 9092
@@ -640,31 +640,31 @@ services:
     logging: *logging
 
 
-  # ********************
-  # Telemetry Components
-  # ********************
-  # Jaeger
-  jaeger:
-    image: ${JAEGERTRACING_IMAGE}
-    container_name: jaeger
-    command:
-      - "--memory.max-traces=5000"
-      - "--query.base-path=/jaeger/ui"
-      - "--prometheus.server-url=http://${PROMETHEUS_ADDR}"
-      - "--prometheus.query.normalize-calls=true"
-      - "--prometheus.query.normalize-duration=true"
-    deploy:
-      resources:
-        limits:
-          memory: 400M
-    restart: unless-stopped
-    ports:
-      - "${JAEGER_SERVICE_PORT}"         # Jaeger UI
-      - "${OTEL_COLLECTOR_PORT_GRPC}"
-    environment:
-      - METRICS_STORAGE_TYPE=prometheus
-      - COLLECTOR_OTLP_GRPC_HOST_PORT=${JAEGER_SERVICE_HOST}:${OTEL_COLLECTOR_PORT_GRPC}
-    logging: *logging
+#  # ********************
+#  # Telemetry Components
+#  # ********************
+#  # Jaeger
+#  jaeger:
+#    image: ${JAEGERTRACING_IMAGE}
+#    container_name: jaeger
+#    command:
+#      - "--memory.max-traces=5000"
+#      - "--query.base-path=/jaeger/ui"
+#      - "--prometheus.server-url=http://${PROMETHEUS_ADDR}"
+#      - "--prometheus.query.normalize-calls=true"
+#      - "--prometheus.query.normalize-duration=true"
+#    deploy:
+#      resources:
+#        limits:
+#          memory: 400M
+#    restart: unless-stopped
+#    ports:
+#      - "${JAEGER_SERVICE_PORT}"         # Jaeger UI
+#      - "${OTEL_COLLECTOR_PORT_GRPC}"
+#    environment:
+#      - METRICS_STORAGE_TYPE=prometheus
+#      - COLLECTOR_OTLP_GRPC_HOST_PORT=${JAEGER_SERVICE_HOST}:${OTEL_COLLECTOR_PORT_GRPC}
+#    logging: *logging
 
   # Grafana
   grafana:
@@ -684,34 +684,34 @@ services:
       - "${GRAFANA_SERVICE_PORT}"
     logging: *logging
 
-  # OpenTelemetry Collector
-  otelcol:
-    image: ${COLLECTOR_CONTRIB_IMAGE}
-    container_name: otel-col
-    deploy:
-      resources:
-        limits:
-          memory: 200M
-    restart: unless-stopped
-    command: [ "--config=/etc/otelcol-config.yml", "--config=/etc/otelcol-config-extras.yml" ]
-    user: 0:0
-    volumes:
-      - ${HOST_FILESYSTEM}:/hostfs:ro
-      - ${DOCKER_SOCK}:/var/run/docker.sock:ro
-      - ${OTEL_COLLECTOR_CONFIG}:/etc/otelcol-config.yml
-      - ${OTEL_COLLECTOR_CONFIG_EXTRAS}:/etc/otelcol-config-extras.yml
-    ports:
-      - "${OTEL_COLLECTOR_PORT_GRPC}"
-      - "${OTEL_COLLECTOR_PORT_HTTP}"
-    depends_on:
-      - jaeger
-    logging: *logging
-    environment:
-      - ENVOY_PORT
-      - HOST_FILESYSTEM
-      - OTEL_COLLECTOR_HOST
-      - OTEL_COLLECTOR_PORT_GRPC
-      - OTEL_COLLECTOR_PORT_HTTP
+#  # OpenTelemetry Collector
+#  otelcol:
+#    image: ${COLLECTOR_CONTRIB_IMAGE}
+#    container_name: otel-col
+#    deploy:
+#      resources:
+#        limits:
+#          memory: 200M
+#    restart: unless-stopped
+#    command: [ "--config=/etc/otelcol-config.yml", "--config=/etc/otelcol-config-extras.yml" ]
+#    user: 0:0
+#    volumes:
+#      - ${HOST_FILESYSTEM}:/hostfs:ro
+#      - ${DOCKER_SOCK}:/var/run/docker.sock:ro
+#      - ${OTEL_COLLECTOR_CONFIG}:/etc/otelcol-config.yml
+#      - ${OTEL_COLLECTOR_CONFIG_EXTRAS}:/etc/otelcol-config-extras.yml
+#    ports:
+#      - "${OTEL_COLLECTOR_PORT_GRPC}"
+#      - "${OTEL_COLLECTOR_PORT_HTTP}"
+#    depends_on:
+#      - jaeger
+#    logging: *logging
+#    environment:
+#      - ENVOY_PORT
+#      - HOST_FILESYSTEM
+#      - OTEL_COLLECTOR_HOST
+#      - OTEL_COLLECTOR_PORT_GRPC
+#      - OTEL_COLLECTOR_PORT_HTTP
 
   # Prometheus
   prometheus:
