@@ -7,15 +7,23 @@
 use OpenTelemetry\API\Globals;
 use OpenTelemetry\API\Trace\Span;
 use OpenTelemetry\API\Trace\SpanKind;
+use OpenTelemetry\SDK\Trace\NoopTracerProvider;
+use OpenTelemetry\SDK\Metrics\NoopMeterProvider;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Log\LoggerInterface;
 use Slim\App;
 
+$noopTracerProvider = new NoopTracerProvider();
+$noopMeterProvider = new NoopMeterProvider();
+
 function calculateQuote($jsonObject): float
 {
+    global $noopTracerProvider;
+    global $noopMeterProvider;
+
     $quote = 0.0;
-    $childSpan = Globals::tracerProvider()->getTracer('manual-instrumentation')
+    $childSpan = $noopTracerProvider->getTracer('manual-instrumentation')
         ->spanBuilder('calculate-quote')
         ->setSpanKind(SpanKind::KIND_INTERNAL)
         ->startSpan();
@@ -36,7 +44,7 @@ function calculateQuote($jsonObject): float
 
         //manual metrics
         static $counter;
-        $counter ??= Globals::meterProvider()
+        $counter ??= $noopMeterProvider
             ->getMeter('quotes')
             ->createCounter('quotes', 'quotes', 'number of quotes calculated');
         $counter->add(1, ['number_of_items' => $numberOfItems]);

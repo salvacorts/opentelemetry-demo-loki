@@ -20,11 +20,12 @@ return function (ContainerBuilder $containerBuilder) {
         LoggerInterface::class => function (ContainerInterface $c) {
             $settings = $c->get(SettingsInterface::class);
             $loggerSettings = $settings->get('logger');
-            $handler = new Handler(
-                Globals::loggerProvider(),
-                LogLevel::INFO,
-            );
-            return new Logger($loggerSettings['name'], [$handler]);
+//             $handler = new Handler(
+//                 Globals::loggerProvider(),
+//                 LogLevel::INFO,
+//             );
+//             return new Logger($loggerSettings['name'], [$handler]);
+            return new Logger($loggerSettings['name']);
         },
     ]);
 };

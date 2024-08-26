@@ -24,5 +24,5 @@ ENV KAFKA_METADATA_LOG_MAX_RECORD_BYTES_BETWEEN_SNAPSHOTS=2800
 ENV KAFKA_AUTO_CREATE_TOPICS_ENABLE=true
 ENV KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1
 ENV KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR=1
-ENV KAFKA_OPTS="-javaagent:/tmp/opentelemetry-javaagent.jar -Dotel.jmx.target.system=kafka-broker"
+#ENV KAFKA_OPTS="-javaagent:/tmp/opentelemetry-javaagent.jar -Dotel.jmx.target.system=kafka-broker"
 ENV CLUSTER_ID=ckjPoprWQzOf0-FuNkGfFQ

@@ -59,8 +59,9 @@ public final class AdService {
   private HealthStatusManager healthMgr;
 
   private static final AdService service = new AdService();
-  private static final Tracer tracer = GlobalOpenTelemetry.getTracer("adservice");
-  private static final Meter meter = GlobalOpenTelemetry.getMeter("adservice");
+  private static final OpenTelemetry openTelemetry = OpenTelemetry.noop();
+  private static final Tracer tracer = openTelemetry.getTracer("adservice");
+  private static final Meter meter = openTelemetry.getMeter("adservice");
 
   private static final LongCounter adRequestsCounter =
       meter

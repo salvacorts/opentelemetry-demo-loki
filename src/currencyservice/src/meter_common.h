@@ -18,18 +18,23 @@ namespace
 {
   void initMeter() 
   {
-    // Build MetricExporter
-    otlp_exporter::OtlpGrpcMetricExporterOptions otlpOptions;
-    auto exporter = otlp_exporter::OtlpGrpcMetricExporterFactory::Create(otlpOptions);
+//    // Build MetricExporter
+//    otlp_exporter::OtlpGrpcMetricExporterOptions otlpOptions;
+//    auto exporter = otlp_exporter::OtlpGrpcMetricExporterFactory::Create(otlpOptions);
+//
+//    // Build MeterProvider and Reader
+//    metric_sdk::PeriodicExportingMetricReaderOptions options;
+//    std::unique_ptr<metric_sdk::MetricReader> reader{
+//        new metric_sdk::PeriodicExportingMetricReader(std::move(exporter), options) };
+//    auto provider = std::shared_ptr<metrics_api::MeterProvider>(new metric_sdk::MeterProvider());
+//    auto p = std::static_pointer_cast<metric_sdk::MeterProvider>(provider);
+//    p->AddMetricReader(std::move(reader));
+//    metrics_api::Provider::SetMeterProvider(provider);
 
-    // Build MeterProvider and Reader
-    metric_sdk::PeriodicExportingMetricReaderOptions options;
-    std::unique_ptr<metric_sdk::MetricReader> reader{
-        new metric_sdk::PeriodicExportingMetricReader(std::move(exporter), options) };
-    auto provider = std::shared_ptr<metrics_api::MeterProvider>(new metric_sdk::MeterProvider());
-    auto p = std::static_pointer_cast<metric_sdk::MeterProvider>(provider);
-    p->AddMetricReader(std::move(reader));
-    metrics_api::Provider::SetMeterProvider(provider);
+    // Set the global meter provider to NoopMeterProvider
+    auto noop_meter_provider = nostd::shared_ptr<metrics_api::NoopMeterProvider>(new metrics_api::NoopMeterProvider());
+    // Pass it as an rvalue to SetMeterProvider
+    metrics_api::Provider::SetMeterProvider(std::move(noop_meter_provider));
   }
 
   nostd::unique_ptr<metrics_api::Counter<uint64_t>> initIntCounter(std::string name, std::string version)

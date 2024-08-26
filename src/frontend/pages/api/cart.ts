@@ -54,3 +54,4 @@ const handler: NextApiHandler<TResponse> = async ({ method, body, query }, res) 
 };
 
 export default InstrumentationMiddleware(handler);
+

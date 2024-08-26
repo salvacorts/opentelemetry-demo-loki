@@ -25,6 +25,10 @@ from openfeature.contrib.provider.flagd import FlagdProvider
 
 from openfeature.contrib.hook.opentelemetry import TracingHook
 
+from opentelemetry.trace import NoOpTracerProvider
+from opentelemetry.metrics import NoOpMeterProvider
+from opentelemetry._logs import NoOpLoggerProvider
+
 # Local
 import logging
 import demo_pb2
@@ -127,26 +131,22 @@ def check_feature_flag(flag_name: str):
 
 
 if __name__ == "__main__":
-    service_name = must_map_env('OTEL_SERVICE_NAME')
+    service_name = "recommendationservice" #must_map_env('OTEL_SERVICE_NAME')
     api.set_provider(FlagdProvider(host=os.environ.get('FLAGD_HOST', 'flagd'), port=os.environ.get('FLAGD_PORT', 8013)))
-    api.add_hooks([TracingHook()])
+    #api.add_hooks([TracingHook()])
 
-    # Initialize Traces and Metrics
-    tracer = trace.get_tracer_provider().get_tracer(service_name)
-    meter = metrics.get_meter_provider().get_meter(service_name)
+    tracer_provider = NoOpTracerProvider()
+    trace.set_tracer_provider(tracer_provider)
+    tracer = tracer_provider.get_tracer(service_name)
+
+    meter_provider = NoOpMeterProvider()
+    metrics.set_meter_provider(meter_provider)
+    meter = meter_provider.get_meter(service_name)
     rec_svc_metrics = init_metrics(meter)
 
     # Initialize Logs
-    logger_provider = LoggerProvider(
-        resource=Resource.create(
-            {
-                'service.name': service_name,
-            }
-        ),
-    )
+    logger_provider = NoOpLoggerProvider()
     set_logger_provider(logger_provider)
-    log_exporter = OTLPLogExporter(insecure=True)
-    logger_provider.add_log_record_processor(BatchLogRecordProcessor(log_exporter))
     handler = LoggingHandler(level=logging.NOTSET, logger_provider=logger_provider)
 
     # Attach OTLP handler to logger

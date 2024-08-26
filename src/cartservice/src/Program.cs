@@ -27,8 +27,9 @@ if (string.IsNullOrEmpty(valkeyAddress))
     Environment.Exit(1);
 }
 
+// Modify logging to use only Console (remove OpenTelemetry logging)
 builder.Logging
-    .AddOpenTelemetry(options => options.AddOtlpExporter())
+    .ClearProviders()
     .AddConsole();
 
 builder.Services.AddSingleton<ICartStore>(x=>
@@ -53,26 +54,26 @@ builder.Services.AddSingleton(x =>
 ));
 
 
-Action<ResourceBuilder> appResourceBuilder =
-    resource => resource
-        .AddContainerDetector()
-        .AddHostDetector();
+//Action<ResourceBuilder> appResourceBuilder =
+//    resource => resource
+//        .AddContainerDetector()
+//        .AddHostDetector();
 
-builder.Services.AddOpenTelemetry()
-    .ConfigureResource(appResourceBuilder)
-    .WithTracing(tracerBuilder => tracerBuilder
-        .AddRedisInstrumentation(
-            options => options.SetVerboseDatabaseStatements = true)
-        .AddAspNetCoreInstrumentation()
-        .AddGrpcClientInstrumentation()
-        .AddHttpClientInstrumentation()
-        .AddOtlpExporter())
-    .WithMetrics(meterBuilder => meterBuilder
-        .AddProcessInstrumentation()
-        .AddRuntimeInstrumentation()
-        .AddAspNetCoreInstrumentation()
-        .AddOtlpExporter());
-OpenFeature.Api.Instance.AddHooks(new TracingHook());
+//builder.Services.AddOpenTelemetry()
+//    .ConfigureResource(appResourceBuilder)
+//    .WithTracing(tracerBuilder => tracerBuilder
+//        .AddRedisInstrumentation(
+//            options => options.SetVerboseDatabaseStatements = true)
+//        .AddAspNetCoreInstrumentation()
+//        .AddGrpcClientInstrumentation()
+//        .AddHttpClientInstrumentation()
+//        .AddOtlpExporter())
+//    .WithMetrics(meterBuilder => meterBuilder
+//        .AddProcessInstrumentation()
+//        .AddRuntimeInstrumentation()
+//        .AddAspNetCoreInstrumentation()
+//        .AddOtlpExporter());
+//OpenFeature.Api.Instance.AddHooks(new TracingHook());
 builder.Services.AddGrpc();
 builder.Services.AddGrpcHealthChecks()
     .AddCheck("Sample", () => HealthCheckResult.Healthy());
@@ -80,7 +81,7 @@ builder.Services.AddGrpcHealthChecks()
 var app = builder.Build();
 
 var ValkeyCartStore = (ValkeyCartStore) app.Services.GetRequiredService<ICartStore>();
-app.Services.GetRequiredService<StackExchangeRedisInstrumentation>().AddConnection(ValkeyCartStore.GetConnection());
+//app.Services.GetRequiredService<StackExchangeRedisInstrumentation>().AddConnection(ValkeyCartStore.GetConnection());
 
 app.MapGrpcService<CartService>();
 app.MapGrpcHealthChecksService();
