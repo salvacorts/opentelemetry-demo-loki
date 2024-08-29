@@ -24,7 +24,6 @@ import (
 	"go.opentelemetry.io/contrib/instrumentation/runtime"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
-	otelcodes "go.opentelemetry.io/otel/codes"
 	"go.opentelemetry.io/otel/propagation"
 	sdkmetric "go.opentelemetry.io/otel/sdk/metric"
 	sdkresource "go.opentelemetry.io/otel/sdk/resource"
@@ -242,16 +241,12 @@ func (p *productCatalog) ListProducts(ctx context.Context, req *pb.Empty) (*pb.L
 }
 
 func (p *productCatalog) GetProduct(ctx context.Context, req *pb.GetProductRequest) (*pb.Product, error) {
-	span := trace.SpanFromContext(ctx)
-	span.SetAttributes(
-		attribute.String("app.product.id", req.Id),
-	)
+	logger := log.WithField("product_id", req.Id)
 
 	// GetProduct will fail on a specific product when feature flag is enabled
 	if p.checkProductFailure(ctx, req.Id) {
-		msg := fmt.Sprintf("Error: ProductCatalogService Fail Feature Flag Enabled")
-		span.SetStatus(otelcodes.Error, msg)
-		span.AddEvent(msg)
+		msg := fmt.Sprintf("Failed to get product: %s", req.Id)
+		logger.Error(msg)
 		return nil, status.Errorf(codes.Internal, msg)
 	}
 
@@ -265,16 +260,11 @@ func (p *productCatalog) GetProduct(ctx context.Context, req *pb.GetProductReque
 
 	if found == nil {
 		msg := fmt.Sprintf("Product Not Found: %s", req.Id)
-		span.SetStatus(otelcodes.Error, msg)
-		span.AddEvent(msg)
+		logger.Error(msg)
 		return nil, status.Errorf(codes.NotFound, msg)
 	}
 
-	msg := fmt.Sprintf("Product Found - ID: %s, Name: %s", req.Id, found.Name)
-	span.AddEvent(msg)
-	span.SetAttributes(
-		attribute.String("app.product.name", found.Name),
-	)
+	logger.WithField("product_name", found.Name).Info("Product Found")
 	return found, nil
 }
 
