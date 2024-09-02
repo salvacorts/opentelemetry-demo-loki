@@ -101,3 +101,14 @@ services:
   #    volumes:
   #      - ./src/alloy/config.alloy:/etc/alloy/config.alloy
   #      - ${DOCKER_SOCK}:/var/run/docker.sock:ro
+
+  fluentd:
+    container_name: fluentd
+    build:
+      context: ./src/fluentd
+      dockerfile: Dockerfile
+    volumes:
+      - ./src/fluentd/fluent.conf:/fluentd/etc/fluent.conf
+    ports:
+      - "24224:24224"
+      - "24224:24224/udp"

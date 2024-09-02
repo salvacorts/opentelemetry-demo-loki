@@ -5,6 +5,12 @@
 # Core Demo Services
 # ******************
 
+x-fluentd-logging: &fluentd-logging
+  driver: "fluentd"
+  options:
+    fluentd-address: "localhost:24224"
+    tag: "docker.{{.Name}}"
+
 networks:
   default:
     name: workshop
@@ -32,6 +38,7 @@ services:
     depends_on:
       kafka:
         condition: service_healthy
+    logging: *fluentd-logging
 
   # AdService
   adservice:
@@ -56,7 +63,7 @@ services:
     depends_on:
       flagd:
         condition: service_started
-
+    logging: *fluentd-logging
 
   # Cart service
   cartservice:
@@ -85,7 +92,7 @@ services:
         condition: service_started
       flagd:
         condition: service_started
-
+    logging: *fluentd-logging
 
   # Checkout service
   checkoutservice:
@@ -131,6 +138,7 @@ services:
         condition: service_healthy
       flagd:
         condition: service_started
+    logging: *fluentd-logging
 
   # Currency service
   currencyservice:
@@ -151,6 +159,7 @@ services:
     environment:
       - CURRENCY_SERVICE_PORT
       - VERSION=${IMAGE_VERSION}
+    logging: *fluentd-logging
 
   # Email service
   emailservice:
@@ -193,6 +202,7 @@ services:
     depends_on:
       kafka:
         condition: service_healthy
+    logging: *fluentd-logging
 
   # Frontend
   frontend:
@@ -244,6 +254,7 @@ services:
         condition: service_started
       flagd:
         condition: service_started
+    logging: *fluentd-logging
 
   # Frontend Proxy (Envoy)
   frontendproxy:
@@ -275,6 +286,7 @@ services:
         condition: service_started
       loadgenerator:
         condition: service_started
+    logging: *fluentd-logging
 
   # Imageprovider
   imageprovider:
@@ -294,6 +306,7 @@ services:
       - "${IMAGE_PROVIDER_PORT}"
     environment:
       - IMAGE_PROVIDER_PORT
+    logging: *fluentd-logging
 
   # Load Generator
   loadgenerator:
@@ -327,6 +340,7 @@ services:
         condition: service_started
       flagd:
         condition: service_started
+    logging: *fluentd-logging
 
   # Payment service
   paymentservice:
@@ -351,6 +365,7 @@ services:
     depends_on:
       flagd:
         condition: service_started
+    logging: *fluentd-logging
 
   # Product Catalog service
   productcatalogservice:
@@ -375,6 +390,7 @@ services:
     depends_on:
       flagd:
         condition: service_started
+    logging: *fluentd-logging
 
   # Quote service
   quoteservice:
@@ -394,6 +410,7 @@ services:
       - "${QUOTE_SERVICE_PORT}"
     environment:
       - QUOTE_SERVICE_PORT
+    logging: *fluentd-logging
 
   # Recommendation service
   recommendationservice:
@@ -422,6 +439,7 @@ services:
         condition: service_started
       flagd:
         condition: service_started
+    logging: *fluentd-logging
 
   # Shipping service
   shippingservice:
@@ -442,6 +460,7 @@ services:
     environment:
       - SHIPPING_SERVICE_PORT
       - QUOTE_SERVICE_ADDR
+    logging: *fluentd-logging
 
   # ******************
   # Dependent Services
@@ -463,6 +482,7 @@ services:
       - 8013
     volumes:
       - ./src/flagd:/etc/flagd
+    logging: *fluentd-logging
 
   # Kafka used by Checkout, Accounting, and Fraud Detection services
   kafka:
@@ -487,6 +507,7 @@ services:
       interval: 5s
       timeout: 10s
       retries: 10
+    logging: *fluentd-logging
 
   # Valkey used by Cart service
   valkey-cart:
@@ -500,3 +521,4 @@ services:
     restart: unless-stopped
     ports:
       - "${VALKEY_PORT}"
+    logging: *fluentd-logging
