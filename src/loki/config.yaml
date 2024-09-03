@@ -29,3 +29,9 @@ schema_config:
       index:
         prefix: index_
         period: 24h
+
+pattern_ingester:
+  enabled: true
+
+limits_config:
+  volume_enabled: true

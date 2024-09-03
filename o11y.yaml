@@ -23,6 +23,8 @@ services:
       - ./src/grafana/provisioning/:/etc/grafana/provisioning/
     ports:
       - "${GRAFANA_SERVICE_PORT}:${GRAFANA_SERVICE_PORT}"
+    environment:
+      - GF_INSTALL_PLUGINS=https://storage.googleapis.com/integration-artifacts/grafana-lokiexplore-app/grafana-lokiexplore-app-latest.zip;grafana-lokiexplore-app
 
   # Prometheus
   prometheus:
