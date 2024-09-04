@@ -29,3 +29,16 @@ schema_config:
       index:
         prefix: index_
         period: 24h
+
+ruler:
+  storage:
+    type: local
+    local:
+      directory: /etc/loki/rules
+  rule_path: /tmp/rules
+  wal:
+    dir: /tmp/wal
+  remote_write:
+    enabled: true
+    client:
+      url: http://prometheus:9090/api/v1/write

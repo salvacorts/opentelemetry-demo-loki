@@ -1,0 +1,16 @@
+groups:
+  - name: Sales
+    interval: 1m
+    rules:
+      - record: cart_items_added:1m
+        expr: |
+          sum by (product) (
+            sum_over_time(
+            {service="cart-service"}
+            |= "AddItemAsync"
+            | pattern "<_> productId=<product>, quantity=<quantity>"
+            | keep product, quantity
+            | unwrap quantity
+            [1m]
+            )
+          )
