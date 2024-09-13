@@ -1,16 +1,14 @@
 groups:
-  - name: Sales
+  - name: Payments
     interval: 1m
     rules:
-      - record: cart_items_added:1m
+      - record: payment_errors:1m
         expr: |
-          sum by (product) (
-            sum_over_time(
-            {service="cart-service"}
-            |= "AddItemAsync"
-            | pattern "<_> productId=<product>, quantity=<quantity>"
-            | keep product, quantity
-            | unwrap quantity
-            [1m]
+          sum (
+            count_over_time(
+              {service="payment-service"}
+              | json
+              | err_message=~".+"
+              [1m]
             )
           )
