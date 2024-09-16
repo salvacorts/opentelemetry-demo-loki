@@ -1,0 +1,103 @@
+# ********************
+# Telemetry Components
+# ********************
+
+networks:
+  default:
+    name: workshop
+    driver: bridge
+
+name: loki-workshop
+services:
+  # Grafana
+  grafana:
+    image: ${GRAFANA_IMAGE}
+    container_name: grafana
+    deploy:
+      resources:
+        limits:
+          memory: 100M
+    restart: unless-stopped
+    volumes:
+      - ./src/grafana/grafana.ini:/etc/grafana/grafana.ini
+      - ./src/grafana/provisioning/:/etc/grafana/provisioning/
+    ports:
+      - "${GRAFANA_SERVICE_PORT}:${GRAFANA_SERVICE_PORT}"
+
+  # Prometheus
+  prometheus:
+    image: ${PROMETHEUS_IMAGE}
+    container_name: prometheus
+    command:
+      - --web.console.templates=/etc/prometheus/consoles
+      - --web.console.libraries=/etc/prometheus/console_libraries
+      - --storage.tsdb.retention.time=1h
+      - --config.file=/etc/prometheus/prometheus-config.yaml
+      - --storage.tsdb.path=/prometheus
+      - --web.enable-lifecycle
+      - --web.route-prefix=/
+      - --enable-feature=exemplar-storage
+      - --enable-feature=otlp-write-receiver
+      - --enable-feature=remote-write-receiver
+    volumes:
+      - ./src/prometheus/prometheus-config.yaml:/etc/prometheus/prometheus-config.yaml
+    deploy:
+      resources:
+        limits:
+          memory: 300M
+    restart: unless-stopped
+    ports:
+      - "${PROMETHEUS_SERVICE_PORT}:${PROMETHEUS_SERVICE_PORT}"
+
+  # Loki
+  loki:
+    image: ${LOKI_IMAGE}
+    container_name: loki
+    command:
+      - -target=all
+      - -config.file=/etc/loki/config.yaml
+    volumes:
+      - ./src/loki/config.yaml:/etc/loki/config.yaml
+    deploy:
+      resources:
+        limits:
+          memory: 300M
+    restart: unless-stopped
+    ports:
+      - "${LOKI_SERVICE_PORT}:${LOKI_SERVICE_PORT}"
+
+  # MINIO (S3 compatible storage, used by Loki)
+  minio:
+    image: minio/minio
+    entrypoint:
+      - sh
+      - -euc
+      - |
+        mkdir -p /data/loki-data && \
+        mkdir -p /data/loki-ruler &&
+        minio server --address "0.0.0.0:9000" --console-address "0.0.0.0:9001" /data
+    environment:
+      - MINIO_ROOT_USER=loki
+      - MINIO_ROOT_PASSWORD=supersecret
+      - MINIO_PROMETHEUS_AUTH_TYPE=public
+      - MINIO_UPDATE=off
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - ./src/minio/.data/:/data
+
+  # Alloy
+  #  alloy:
+  #    image: ${ALLOY_IMAGE}
+  #    container_name: alloy
+  #    command:
+  #      - run
+  #      - --server.http.listen-addr=0.0.0.0:${ALLOY_SERVICE_PORT}
+  #      - /etc/alloy/config.alloy
+  #    restart: unless-stopped
+  #    ports:
+  #      - "${ALLOY_SERVICE_PORT}:${ALLOY_SERVICE_PORT}"
+  #    volumes:
+  #      - ./src/alloy/config.alloy:/etc/alloy/config.alloy
+  #      - ${DOCKER_SOCK}:/var/run/docker.sock:ro
