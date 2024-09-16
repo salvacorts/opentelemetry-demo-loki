@@ -1,7 +1,3 @@
-livedebugging {
-  enabled = true
-}
-
 discovery.docker "containers" {
   host = "unix:///var/run/docker.sock"
 }

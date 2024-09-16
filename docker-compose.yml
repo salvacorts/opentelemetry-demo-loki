@@ -1,13 +1,6 @@
 # Copyright The OpenTelemetry Authors
 # SPDX-License-Identifier: Apache-2.0
 
-x-default-logging: &logging
-  driver: "json-file"
-  options:
-    max-size: "5m"
-    max-file: "2"
-    tag: "{{.Name}}"
-
 networks:
   default:
     name: opentelemetry-demo
@@ -36,7 +29,6 @@ services:
     depends_on:
       kafka:
         condition: service_healthy
-    logging: *logging
 
   # AdService
   adservice:
@@ -61,7 +53,7 @@ services:
     depends_on:
       flagd:
         condition: service_started
-    logging: *logging
+
 
   # Cart service
   cartservice:
@@ -90,7 +82,7 @@ services:
         condition: service_started
       flagd:
         condition: service_started
-    logging: *logging
+
 
   # Checkout service
   checkoutservice:
@@ -136,7 +128,6 @@ services:
         condition: service_healthy
       flagd:
         condition: service_started
-    logging: *logging
 
   # Currency service
   currencyservice:
@@ -157,7 +148,6 @@ services:
     environment:
       - CURRENCY_SERVICE_PORT
       - VERSION=${IMAGE_VERSION}
-    logging: *logging
 
   # Email service
   emailservice:
@@ -178,7 +168,6 @@ services:
     environment:
       - APP_ENV=production
       - EMAIL_SERVICE_PORT
-    logging: *logging
 
   # Fraud Detection service
   frauddetectionservice:
@@ -201,7 +190,6 @@ services:
     depends_on:
       kafka:
         condition: service_healthy
-    logging: *logging
 
   # Frontend
   frontend:
@@ -253,7 +241,6 @@ services:
         condition: service_started
       flagd:
         condition: service_started
-    logging: *logging
 
   # Frontend Proxy (Envoy)
   frontendproxy:
@@ -308,7 +295,6 @@ services:
       - "${IMAGE_PROVIDER_PORT}"
     environment:
       - IMAGE_PROVIDER_PORT
-    logging: *logging
 
   # Load Generator
   loadgenerator:
@@ -342,7 +328,6 @@ services:
         condition: service_started
       flagd:
         condition: service_started
-    logging: *logging
 
   # Payment service
   paymentservice:
@@ -367,7 +352,6 @@ services:
     depends_on:
       flagd:
         condition: service_started
-    logging: *logging
 
   # Product Catalog service
   productcatalogservice:
@@ -392,7 +376,6 @@ services:
     depends_on:
       flagd:
         condition: service_started
-    logging: *logging
 
   # Quote service
   quoteservice:
@@ -412,7 +395,6 @@ services:
       - "${QUOTE_SERVICE_PORT}"
     environment:
       - QUOTE_SERVICE_PORT
-    logging: *logging
 
   # Recommendation service
   recommendationservice:
@@ -441,7 +423,6 @@ services:
         condition: service_started
       flagd:
         condition: service_started
-    logging: *logging
 
   # Shipping service
   shippingservice:
@@ -462,7 +443,6 @@ services:
     environment:
       - SHIPPING_SERVICE_PORT
       - QUOTE_SERVICE_ADDR
-    logging: *logging
 
   # ******************
   # Dependent Services
@@ -484,8 +464,6 @@ services:
       - 8013
     volumes:
       - ./src/flagd:/etc/flagd
-    logging:
-      *logging
 
   # Kafka used by Checkout, Accounting, and Fraud Detection services
   kafka:
@@ -510,7 +488,6 @@ services:
       interval: 5s
       timeout: 10s
       retries: 10
-    logging: *logging
 
   # Valkey used by Cart service
   valkey-cart:
@@ -524,7 +501,6 @@ services:
     restart: unless-stopped
     ports:
       - "${VALKEY_PORT}"
-    logging: *logging
 
 
 #  # ********************
@@ -545,7 +521,6 @@ services:
       - ./src/grafana/provisioning/:/etc/grafana/provisioning/
     ports:
       - "${GRAFANA_SERVICE_PORT}:${GRAFANA_SERVICE_PORT}"
-    logging: *logging
 
   # Prometheus
   prometheus:
@@ -571,7 +546,6 @@ services:
     restart: unless-stopped
     ports:
       - "${PROMETHEUS_SERVICE_PORT}:${PROMETHEUS_SERVICE_PORT}"
-    logging: *logging
 
   # Loki
   loki:
@@ -589,7 +563,6 @@ services:
     restart: unless-stopped
     ports:
     - "${LOKI_SERVICE_PORT}:${LOKI_SERVICE_PORT}"
-    logging: *logging
 
   # MINIO (S3 compatible storage, used by Loki)
   minio:
@@ -611,7 +584,6 @@ services:
       - "9001:9001"
     volumes:
       - ./src/minio/.data/:/data
-    logging: *logging
 
   # Alloy
   alloy:
@@ -620,7 +592,6 @@ services:
     command:
       - run
       - --server.http.listen-addr=0.0.0.0:${ALLOY_SERVICE_PORT}
-      - --stability.level=experimental # TODO: Remove
       - /etc/alloy/config.alloy
     restart: unless-stopped
     ports:
@@ -628,4 +599,3 @@ services:
     volumes:
       - ./src/alloy/config.alloy:/etc/alloy/config.alloy
       - ${DOCKER_SOCK}:/var/run/docker.sock:ro
-    logging: *logging
