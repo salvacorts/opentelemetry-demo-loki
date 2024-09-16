@@ -58,6 +58,7 @@ services:
       - -config.file=/etc/loki/config.yaml
     volumes:
       - ./src/loki/config.yaml:/etc/loki/config.yaml
+      - ./src/loki/recording-rules.yaml:/etc/loki/rules/fake/recording-rules.yaml
     deploy:
       resources:
         limits:
