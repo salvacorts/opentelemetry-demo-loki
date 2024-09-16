@@ -586,16 +586,16 @@ services:
       - ./src/minio/.data/:/data
 
   # Alloy
-  alloy:
-    image: ${ALLOY_IMAGE}
-    container_name: alloy
-    command:
-      - run
-      - --server.http.listen-addr=0.0.0.0:${ALLOY_SERVICE_PORT}
-      - /etc/alloy/config.alloy
-    restart: unless-stopped
-    ports:
-      - "${ALLOY_SERVICE_PORT}:${ALLOY_SERVICE_PORT}"
-    volumes:
-      - ./src/alloy/config.alloy:/etc/alloy/config.alloy
-      - ${DOCKER_SOCK}:/var/run/docker.sock:ro
+#  alloy:
+#    image: ${ALLOY_IMAGE}
+#    container_name: alloy
+#    command:
+#      - run
+#      - --server.http.listen-addr=0.0.0.0:${ALLOY_SERVICE_PORT}
+#      - /etc/alloy/config.alloy
+#    restart: unless-stopped
+#    ports:
+#      - "${ALLOY_SERVICE_PORT}:${ALLOY_SERVICE_PORT}"
+#    volumes:
+#      - ./src/alloy/config.alloy:/etc/alloy/config.alloy
+#      - ${DOCKER_SOCK}:/var/run/docker.sock:ro
