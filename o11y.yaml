@@ -69,7 +69,7 @@ services:
   # MINIO (S3 compatible storage, used by Loki)
   minio:
     image: minio/minio
-    container_name: loki
+    container_name: minio
     entrypoint:
       - sh
       - -euc
